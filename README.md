@@ -35,6 +35,10 @@ Aplicación de gestión de tareas con sincronización bidireccional con Jira, im
 | **RTK Query** | - | Caching y sincronización de datos con el backend |
 | **TypeScript** | 5.x | Type safety para reducir errores en runtime |
 
+### Arquitectura de la aplicacion
+
+![Aquitectura](arquitecturabase.png)
+
 ## 💡 Decisiones de Diseño
 
 ### PostgreSQL vs NoSQL
