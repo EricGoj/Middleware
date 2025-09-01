@@ -1,14 +1,14 @@
 # Middleware Challenge
 
 ## 📋 Descripción
-Aplicación de gestión de tareas con sincronización bidireccional con Jira, implementada siguiendo los principios de arquitectura hexagonal para demostrar buenas prácticas de diseño de software empresarial.
+Mini Aplicacion para Gestionar Issues, con un frontend muy simple para poder gestionar tareas, comunicacion en tiempo real sobre actualizaciones sobre el gestor de tareas que este integrado, en este caso es JIRA. Como backend la idea es hacer una API middleware que funcione como comunicacion entre el interfaz y JIRA, pero implementado arquitectura hexagonal, para que facilmente se pueda integrar con otro servicio de gestion de Tareas, como MIRO.
 
 ## 🏗️ Arquitectura
 
 ### Arquitectura Hexagonal (Ports & Adapters)
 **Decisión:** Implementación estricta de arquitectura hexagonal.
 
-**Justificación:** 
+**Porque elegi esta arquitectura?** 
 - **Aislamiento del dominio**: La lógica de negocio permanece independiente de frameworks y servicios externos
 - **Testabilidad**: Facilita el testing unitario mediante inyección de dependencias y mocks de puertos
 - **Flexibilidad**: Permite cambiar adaptadores (ej: Jira por otro sistema) sin modificar el dominio
@@ -21,7 +21,7 @@ Aplicación de gestión de tareas con sincronización bidireccional con Jira, im
 | Tecnología | Versión | Justificación |
 |------------|---------|---------------|
 | **Java** | 24 | LTS con características modernas (records, pattern matching) |
-| **Spring Boot** | 3.2.x | Framework maduro con excelente soporte para arquitectura hexagonal vía inyección de dependencias |
+| **Spring Boot** | 3.5.x | Framework maduro con excelente soporte para arquitectura hexagonal vía inyección de dependencias |
 | **PostgreSQL** | 15 | Base de datos relacional para garantizar consistencia ACID en sincronización bidireccional |
 | **JPA/Hibernate** | - | Abstracción de persistencia que se alinea con el patrón Repository |
 | **Maven** | 3.9.x | Gestión de dependencias estandarizada en el ecosistema Java empresarial |
@@ -53,7 +53,6 @@ Aplicación de gestión de tareas con sincronización bidireccional con Jira, im
 ### Sincronización Bidireccional
 - **Webhook de Jira**: Recepción de eventos en tiempo real para mantener sincronización
 - **Patrón Outbox**: Garantiza eventual consistency en caso de fallos de red
-- **Idempotencia**: Operaciones diseñadas para ser seguras ante reintentos
 
 ### Patrones Implementados
 - **Repository Pattern**: Abstracción de la capa de persistencia
@@ -102,9 +101,7 @@ Aplicación de gestión de tareas con sincronización bidireccional con Jira, im
 
 ## 📚 Documentación Adicional
 
-- [Colección Postman](./docs/postman-collection.json)
-- [Diagrama de Arquitectura](./docs/architecture-diagram.png)
-- [Especificación OpenAPI](./docs/openapi.yaml)
+- En proceso
 
 ## 👤 Autor
 Eric Quevedo
