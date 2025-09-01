@@ -1,0 +1,11 @@
+.DS_Store
+node_modules
+.env
+.idea
+.vscode
+
+# IDE and tool directories
+.serena/
+.claude/
+.vscode
+data/db/
