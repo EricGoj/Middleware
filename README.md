@@ -20,7 +20,7 @@ Mini Aplicacion para Gestionar Issues, con un frontend muy simple para poder ges
 
 | Tecnología | Versión | Justificación |
 |------------|---------|---------------|
-| **Java** | 24 | LTS con características modernas (records, pattern matching) |
+| **Java** | 21 | LTS con características modernas (records, pattern matching) |
 | **Spring Boot** | 3.5.x | Framework maduro con excelente soporte para arquitectura hexagonal vía inyección de dependencias |
 | **PostgreSQL** | 15 | Base de datos relacional para garantizar consistencia ACID en sincronización bidireccional |
 | **JPA/Hibernate** | - | Abstracción de persistencia que se alinea con el patrón Repository |
