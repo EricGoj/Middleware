@@ -1,9 +1,8 @@
 package com.acme.middleware.infrastructure.ws.publisher;
 
 import com.acme.middleware.domain.event.DomainEvent;
-import com.acme.middleware.domain.event.TaskCreated;
-import com.acme.middleware.domain.event.TaskDeleted;
-import com.acme.middleware.domain.event.TaskUpdated;
+import com.acme.middleware.domain.event.IssueCreated;
+import com.acme.middleware.domain.event.IssueUpdated;
 import com.acme.middleware.domain.port.DomainEventPublisher;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
@@ -19,13 +18,10 @@ public class SpringDomainEventPublisher implements DomainEventPublisher {
 
     @Override
     public void publish(DomainEvent event) {
-        if (event instanceof TaskCreated taskCreated) {
-            messagingTemplate.convertAndSend("/topic/tasks.created", taskCreated);
-        } else if (event instanceof TaskUpdated taskUpdated) {
-            messagingTemplate.convertAndSend("/topic/tasks.updated", taskUpdated);
-        } else if (event instanceof TaskDeleted taskDeleted) {
-            messagingTemplate.convertAndSend("/topic/tasks.deleted", taskDeleted);
+        if (event instanceof IssueCreated issueCreated) {
+            messagingTemplate.convertAndSend("/topic/issues.created", issueCreated);
+        } else if (event instanceof IssueUpdated issueUpdated) {
+            messagingTemplate.convertAndSend("/topic/issues.updated", issueUpdated);
         }
-        // Log unknown event type if needed
     }
 }

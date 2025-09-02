@@ -1,6 +1,6 @@
 package com.acme.middleware.infrastructure.rest.handler;
 
-import com.acme.middleware.application.service.TaskNotFoundException;
+import com.acme.middleware.application.exceptions.IssueNotFoundException;
 import com.acme.middleware.infrastructure.rest.dto.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -17,12 +17,12 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(TaskNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleTaskNotFound(TaskNotFoundException ex, HttpServletRequest request) {
+    @ExceptionHandler(IssueNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleIssueNotFound(IssueNotFoundException ex, HttpServletRequest request) {
         ErrorResponse error = new ErrorResponse(
                 ex.getMessage(),
-                "Task Not Found",
-                HttpStatus.NOT_FOUND.value(),
+                "Issue Not Found",
+                HttpStatus.NOT_FOUND.value(),   
                 Instant.now(),
                 request.getRequestURI()
         );
