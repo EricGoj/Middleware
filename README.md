@@ -41,6 +41,11 @@ Mini Aplicacion para Gestionar Issues, con un frontend muy simple para poder ges
 
 ## 💡 Decisiones de Diseño
 
+
+## Como creamos una nueva Issue en base y en JIRA?
+![WorkflowNewIssue](workflowCreaTarea.png)
+
+
 ### PostgreSQL vs NoSQL
 **Elección:** PostgreSQL
 
