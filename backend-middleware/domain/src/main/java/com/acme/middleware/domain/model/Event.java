@@ -1,13 +1,13 @@
 package com.acme.middleware.domain.model;
 
 import java.time.Instant;
-import java.util.UUID;
+import java.util.Objects;
 
 public class Event {
 
     private String id;
     private String eventType;
-    private UUID entityId;
+    private IssueId entityId;
     private String payload;
     private String status;
     private Integer retryCount;
@@ -15,10 +15,10 @@ public class Event {
     private Instant processedAt;
     private String error;
     
-    public Event(String id, String eventType, IssueId issueId, String title, String description, String priority) {
-        this.id = id;
+    public Event(String issueId, String eventType, IssueId entityId, String title, String description, String priority) {
+        this.id = issueId;
         this.eventType = eventType;
-        this.entityId = issueId.getValue();
+        this.entityId = Objects.requireNonNull(entityId, "Issue id cannot be null");
         this.payload = String.format("{\"title\":\"%s\",\"description\":\"%s\",\"priority\":\"%s\"}", title, description, priority);
         this.status = "PENDING";
         this.retryCount = 0;
@@ -27,7 +27,7 @@ public class Event {
         this.error = null;
     }
 
-    public Event(String id, String eventType, UUID entityId, String payload, String status, Integer retryCount, Instant createdAt, Instant processedAt, String error) {
+    public Event(String id, String eventType, IssueId entityId, String payload, String status, Integer retryCount, Instant createdAt, Instant processedAt, String error) {
         this.id = id;
         this.eventType = eventType;
         this.entityId = entityId;
@@ -39,7 +39,7 @@ public class Event {
         this.error = error;
     }
 
-    public static Event restore(String id, String eventType, UUID entityId, String payload, String status, Integer retryCount, Instant createdAt, Instant processedAt, String error) {
+    public static Event restore(String id, String eventType, IssueId entityId, String payload, String status, Integer retryCount, Instant createdAt, Instant processedAt, String error) {
         return new Event(id, eventType, entityId, payload, status, retryCount, createdAt, processedAt, error);
     }
 
@@ -59,11 +59,11 @@ public class Event {
         this.eventType = eventType;
     }
 
-    public UUID getEntityId() {
+    public IssueId getEntityId() {
         return entityId;
     }
 
-    public void setEntityId(UUID entityId) {
+    public void setEntityId(IssueId entityId) {
         this.entityId = entityId;
     }
 

@@ -34,9 +34,9 @@ public class JiraService {
         }
     }
 
-    public String createIssue(String summary, String description, String issueType, Instant dueDate) {
+    public String createIssue(String summary, String description, String issueType, Instant dueDate, String priority) {
         try {
-            String key = jiraGateway.createIssue(summary, description, issueType, dueDate);
+            String key = jiraGateway.createIssue(summary, description, issueType, dueDate, priority);
             log.info("Created Jira issue {}", key);
             return key;
         } catch (Exception e) {

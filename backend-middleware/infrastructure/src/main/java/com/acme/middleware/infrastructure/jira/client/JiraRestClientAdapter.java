@@ -34,8 +34,8 @@ public class JiraRestClientAdapter implements IssueUseCase, JiraIssuePort {
     }
 
     @Override
-    public String createIssue(String summary, String description, String issueType, Instant dueDate) {
-        return createIssueWithAdf(summary, description, issueType, dueDate.toString(), issueType);
+    public String createIssue(String summary, String description, String issueType, Instant dueDate, String priority) {
+        return createIssueWithAdf(summary, description, issueType, dueDate.toString(), priority);
     }
 
     /**

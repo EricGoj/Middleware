@@ -10,5 +10,7 @@ public interface EventRepository {
     List<Event> findPendingEvents();
 
     Event save(Event event);
+
+    void deleteById(String id);
     
 }

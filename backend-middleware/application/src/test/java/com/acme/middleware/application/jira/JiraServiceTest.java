@@ -33,9 +33,9 @@ class JiraServiceTest {
     @Test
     void createIssue_delegatesToGateway() {
         Instant fixedTime = Instant.parse("2025-09-01T20:33:33.321895Z");
-        when(jiraGateway.createIssue("DEMO", "sum", "desc", fixedTime)).thenReturn("DEMO-1");
-        service.createIssue("DEMO", "sum", "desc", fixedTime);
-        verify(jiraGateway).createIssue("DEMO", "sum", "desc", fixedTime);
+        when(jiraGateway.createIssue("DEMO", "sum", "desc", fixedTime, "Normal")).thenReturn("DEMO-1");
+        service.createIssue("DEMO", "sum", "desc", fixedTime, "Normal");
+        verify(jiraGateway).createIssue("DEMO", "sum", "desc", fixedTime, "Normal");
     }
 
     @Test
