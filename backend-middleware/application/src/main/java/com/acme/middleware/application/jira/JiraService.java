@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.acme.middleware.application.port.JiraEventPublisher;
 import com.acme.middleware.application.usecase.IssueUseCase;
-import com.acme.middleware.domain.model.Task;
+import com.acme.middleware.domain.model.Issue;
 
 import java.time.Instant;
 import java.util.HashMap;
@@ -26,11 +26,11 @@ public class JiraService {
         this.jiraEventPublisher = jiraEventPublisher;
     }
 
-    public void syncTasks(List<Task> tasks) {
+    public void syncIssues(List<Issue> issues) {
         try {
             //desarrollar
         } catch (Exception e) {
-            log.error("Failed to sync tasks: {}", e.getMessage(), e);
+            log.error("Failed to sync issues: {}", e.getMessage(), e);
         }
     }
 

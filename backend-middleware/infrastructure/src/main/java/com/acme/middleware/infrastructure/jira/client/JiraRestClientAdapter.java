@@ -1,7 +1,11 @@
 package com.acme.middleware.infrastructure.jira.client;
 
+import com.acme.middleware.application.port.JiraIssuePort;
 import com.acme.middleware.application.usecase.IssueUseCase;
 import com.acme.middleware.infrastructure.jira.config.JiraProperties;
+import com.acme.middleware.infrastructure.jira.dto.JiraCreateIssueRequest;
+import com.acme.middleware.infrastructure.jira.dto.JiraCreateIssueResponse;
+import com.acme.middleware.infrastructure.jira.dto.JiraIssueFields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
@@ -14,11 +18,10 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.Instant;
-import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class JiraRestClientAdapter implements IssueUseCase {
+public class JiraRestClientAdapter implements IssueUseCase, JiraIssuePort {
 
     private static final Logger log = LoggerFactory.getLogger(JiraRestClientAdapter.class);
 
@@ -32,32 +35,42 @@ public class JiraRestClientAdapter implements IssueUseCase {
 
     @Override
     public String createIssue(String summary, String description, String issueType, Instant dueDate) {
+        return createIssueWithAdf(summary, description, issueType, dueDate.toString(), issueType);
+    }
+
+    /**
+     * Creates a Jira issue using ADF with duedate and priority support
+     */
+    public String createIssueWithAdf(String summary, String description, String issueType, String duedate, String priority) {
         String url = "/rest/api/3/issue";
-        Map<String, Object> body = new HashMap<>();
-        Map<String, Object> fields = new HashMap<>();
-        fields.put("project", Map.of("key", props.projectKey()));
-        fields.put("summary", summary);
-        fields.put("dueDate", dueDate.toString());
-        if (description != null) {
-            fields.put("description", description);
-        }
-        fields.put("issuetype", Map.of("name", issueType));
-        body.put("fields", fields);
+        
+        JiraIssueFields fields = JiraIssueFields.of(
+            props.projectKey(),
+            summary,
+            description != null ? description : "",
+            issueType,
+            duedate,
+            priority
+        );
+        
+        JiraCreateIssueRequest request = JiraCreateIssueRequest.of(fields);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(MediaType.parseMediaTypes("application/json"));
 
         try {
-            ResponseEntity<Map> response = jiraRestTemplate.exchange(
+            ResponseEntity<JiraCreateIssueResponse> response = jiraRestTemplate.exchange(
                     url,
                     HttpMethod.POST,
-                    new HttpEntity<>(body, headers),
-                    Map.class
+                    new HttpEntity<>(request, headers),
+                    JiraCreateIssueResponse.class
             );
-            Map<String, Object> resp = response.getBody();
-            if (resp != null && resp.get("key") != null) {
-                return resp.get("key").toString();
+            
+            JiraCreateIssueResponse responseBody = response.getBody();
+            if (responseBody != null && responseBody.key() != null) {
+                log.info("Successfully created Jira issue: {} in project {}", responseBody.key(), props.projectKey());
+                return responseBody.key();
             }
             throw new IllegalStateException("Jira create issue response missing key");
         } catch (RestClientException e) {

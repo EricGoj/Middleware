@@ -6,11 +6,13 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication(scanBasePackages = "com.acme.middleware")
-@EntityScan("com.acme.middleware.infrastructure.persistence.entity")
-@EnableJpaRepositories("com.acme.middleware.infrastructure.persistence.repository")
+@EntityScan({"com.acme.middleware.infrastructure.persistence.entity", "com.acme.middleware.infrastructure.sync.entity"})
+@EnableJpaRepositories({"com.acme.middleware.infrastructure.persistence.repository", "com.acme.middleware.infrastructure.sync.repository"})
 @EnableAsync
+@EnableScheduling
 @ConfigurationPropertiesScan(basePackages = "com.acme.middleware.infrastructure.jira.config")
 public class MiddlewareApplication {
 
