@@ -1,15 +1,15 @@
 package com.acme.middleware.domain.port;
 
 import com.acme.middleware.domain.model.Task;
-import com.acme.middleware.domain.model.TaskId;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface TaskRepository {
     Task save(Task task);
-    Optional<Task> findById(TaskId taskId);
+    Optional<Task> findById(UUID taskId);
     List<Task> findAll();
-    void deleteById(TaskId taskId);
-    boolean existsById(TaskId taskId);
+    void deleteById(UUID taskId);
+    boolean existsById(UUID taskId);
 }

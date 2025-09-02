@@ -15,14 +15,18 @@ public class TaskPersistenceMapper {
         if (task == null) {
             return null;
         }
-        return new TaskEntity(
+        TaskEntity entity = new TaskEntity(
                 task.getId().getValue(),
                 task.getTitle(),
                 task.getDescription(),
                 task.getStatus(),
                 task.getCreatedAt(),
-                task.getUpdatedAt()
+                task.getUpdatedAt(),
+                task.getBusinessKey()
         );
+        entity.setDueDate(task.getDueDate());
+        entity.setPriority(task.getPriority());
+        return entity;
     }
 
     public Task toDomain(TaskEntity entity) {
@@ -35,7 +39,10 @@ public class TaskPersistenceMapper {
                 entity.getDescription(),
                 entity.getStatus(),
                 entity.getCreatedAt(),
-                entity.getUpdatedAt()
+                entity.getUpdatedAt(),
+                entity.getDueDate(),
+                entity.getPriority(),
+                entity.getBusinessKey()
         );
     }
 

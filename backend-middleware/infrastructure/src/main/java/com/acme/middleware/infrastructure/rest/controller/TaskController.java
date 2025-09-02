@@ -40,9 +40,29 @@ public class TaskController {
     }
 
     @PostMapping
-    @Operation(summary = "Create a new task")
+    @Operation(summary = "Create a new task", 
+               description = "Creates a new task with the provided details",
+               requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                   description = "Task creation request",
+                   content = @io.swagger.v3.oas.annotations.media.Content(
+                       mediaType = "application/json",
+                       examples = @io.swagger.v3.oas.annotations.media.ExampleObject(
+                           name = "Sample Task",
+                           summary = "Example task creation",
+                           value = """
+                           {
+                             "title": "Complete project documentation",
+                             "description": "Write comprehensive documentation for the middleware project",
+                             "dueDate": "2024-12-31T23:59:59Z",
+                             "priority": "HIGH",
+                             "status": "TODO"
+                           }
+                           """
+                       )
+                   )
+               ))
     public ResponseEntity<TaskResponse> createTask(@Valid @RequestBody TaskRequest request) {
-        CreateTaskCommand command = new CreateTaskCommand(request.title(), request.description());
+        CreateTaskCommand command = new CreateTaskCommand(request.title(), request.description(), request.dueDate(), request.priority());
         TaskDto taskDto = createTaskUseCase.execute(command);
         TaskResponse response = mapToResponse(taskDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -66,14 +86,16 @@ public class TaskController {
         return ResponseEntity.ok(responses);
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     @Operation(summary = "Update task")
     public ResponseEntity<TaskResponse> updateTask(@PathVariable UUID id, 
                                                   @Valid @RequestBody TaskRequest request) {
         UpdateTaskCommand command = new UpdateTaskCommand(
                 request.title(), 
                 request.description(), 
-                request.status()
+                request.status(),
+                request.dueDate(),
+                request.priority()
         );
         TaskDto taskDto = updateTaskUseCase.execute(id, command);
         TaskResponse response = mapToResponse(taskDto);
@@ -94,7 +116,9 @@ public class TaskController {
                 taskDto.description(),
                 taskDto.status(),
                 taskDto.createdAt(),
-                taskDto.updatedAt()
+                taskDto.updatedAt(),
+                taskDto.dueDate(),
+                taskDto.priority()
         );
     }
 }

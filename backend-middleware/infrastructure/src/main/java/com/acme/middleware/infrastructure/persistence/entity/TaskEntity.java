@@ -29,15 +29,25 @@ public class TaskEntity {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
+    @Column(name = "due_date")
+    private Instant dueDate;
+
+    @Column(length = 20)
+    private String priority;
+
+    @Column(length = 20)
+    private String businessKey;
+
     public TaskEntity() {}
 
-    public TaskEntity(UUID id, String title, String description, TaskStatus status, Instant createdAt, Instant updatedAt) {
+    public TaskEntity(UUID id, String title, String description, TaskStatus status, Instant createdAt, Instant updatedAt, String businessKey) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.status = status;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.businessKey = businessKey;
     }
 
     public UUID getId() {
@@ -86,5 +96,29 @@ public class TaskEntity {
 
     public void setUpdatedAt(Instant updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public Instant getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(Instant dueDate) {
+        this.dueDate = dueDate;
+    }
+
+    public String getPriority() {
+        return priority;
+    }
+
+    public void setPriority(String priority) {
+        this.priority = priority;
+    }
+
+    public String getBusinessKey() {
+        return businessKey;
+    }
+
+    public void setBusinessKey(String businessKey) {
+        this.businessKey = businessKey;
     }
 }

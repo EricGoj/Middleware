@@ -2,11 +2,11 @@ package com.acme.middleware.application.service;
 
 import com.acme.middleware.application.dto.TaskDto;
 import com.acme.middleware.application.dto.UpdateTaskCommand;
+import com.acme.middleware.application.exceptions.TaskNotFoundException;
 import com.acme.middleware.application.mapper.TaskApplicationMapper;
 import com.acme.middleware.application.usecase.UpdateTaskUseCase;
 import com.acme.middleware.domain.event.TaskUpdated;
 import com.acme.middleware.domain.model.Task;
-import com.acme.middleware.domain.model.TaskId;
 import com.acme.middleware.domain.port.DomainEventPublisher;
 import com.acme.middleware.domain.port.TaskRepository;
 
@@ -29,8 +29,7 @@ public class UpdateTaskService implements UpdateTaskUseCase {
 
     @Override
     public TaskDto execute(UUID taskId, UpdateTaskCommand command) {
-        TaskId id = TaskId.of(taskId);
-        Task task = taskRepository.findById(id)
+        Task task = taskRepository.findById(taskId)
             .orElseThrow(() -> new TaskNotFoundException("Task not found with id: " + taskId));
 
         if (command.title() != null) {
@@ -41,6 +40,12 @@ public class UpdateTaskService implements UpdateTaskUseCase {
         }
         if (command.status() != null) {
             task.updateStatus(command.status());
+        }
+        if (command.dueDate() != null) {
+            task.updateDueDate(command.dueDate());
+        }
+        if (command.priority() != null) {
+            task.updatePriority(command.priority());
         }
 
         Task updatedTask = taskRepository.save(task);

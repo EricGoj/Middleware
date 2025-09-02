@@ -1,5 +1,6 @@
 package com.acme.middleware.infrastructure.config;
 
+import com.acme.middleware.application.jira.JiraService;
 import com.acme.middleware.application.mapper.TaskApplicationMapper;
 import com.acme.middleware.application.service.*;
 import com.acme.middleware.application.usecase.*;
@@ -19,8 +20,9 @@ public class ApplicationConfig {
     @Bean
     public CreateTaskUseCase createTaskUseCase(TaskRepository taskRepository, 
                                              DomainEventPublisher eventPublisher,
-                                             TaskApplicationMapper mapper) {
-        return new CreateTaskService(taskRepository, eventPublisher, mapper);
+                                             TaskApplicationMapper mapper,
+                                             JiraService jiraService) {
+        return new CreateTaskService(taskRepository, eventPublisher, mapper, jiraService);
     }
 
     @Bean
@@ -31,8 +33,9 @@ public class ApplicationConfig {
 
     @Bean
     public ListTasksUseCase listTasksUseCase(TaskRepository taskRepository, 
-                                           TaskApplicationMapper mapper) {
-        return new ListTasksService(taskRepository, mapper);
+                                           TaskApplicationMapper mapper,
+                                           JiraService jiraService) {
+        return new ListTasksService(taskRepository, mapper, jiraService);
     }
 
     @Bean
@@ -44,7 +47,8 @@ public class ApplicationConfig {
 
     @Bean
     public DeleteTaskUseCase deleteTaskUseCase(TaskRepository taskRepository,
-                                             DomainEventPublisher eventPublisher) {
-        return new DeleteTaskService(taskRepository, eventPublisher);
+                                             DomainEventPublisher eventPublisher,
+                                             JiraService jiraService) {
+        return new DeleteTaskService(taskRepository, eventPublisher, jiraService);
     }
 }

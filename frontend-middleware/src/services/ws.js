@@ -1,5 +1,6 @@
 import { Client } from '@stomp/stompjs'
-import { upsertFromWs, removeFromWs } from '../features/tasks/tasksSlice.js'
+import SockJS from 'sockjs-client'
+import { upsertFromWs, removeFromWs, fetchTasks } from '../features/tasks/tasksSlice.js'
 
 let stompClient = null
 let reconnectAttempts = 0
@@ -30,7 +31,7 @@ const transformWebSocketPayload = (payload) => {
  * @param {Function} dispatch - Redux dispatch function
  */
 export const connectWebSocket = (dispatch) => {
-  const wsUrl = import.meta.env.VITE_WS_URL || 'ws://localhost:8080/ws'
+  const wsUrl = import.meta.env.VITE_WS_URL || 'http://localhost:8080/ws'
   
   if (stompClient?.connected) {
     console.log('WebSocket already connected')
@@ -38,7 +39,8 @@ export const connectWebSocket = (dispatch) => {
   }
 
   stompClient = new Client({
-    brokerURL: wsUrl,
+    // Use SockJS transport to match backend withSockJS()
+    webSocketFactory: () => new SockJS(wsUrl),
     connectHeaders: {},
     debug: (str) => {
       console.log('STOMP Debug:', str)
@@ -68,6 +70,12 @@ export const connectWebSocket = (dispatch) => {
               if (data.id) {
                 dispatch(removeFromWs(data.id))
               }
+              break
+            case 'JIRA_ISSUE_CREATED':
+            case 'JIRA_ISSUE_UPDATED':
+            case 'JIRA_ISSUE_DELETED':
+              // Jira webhook events: refresh tasks to reflect latest state
+              dispatch(fetchTasks())
               break
             default:
               console.warn('Unknown WebSocket message type:', data.type)

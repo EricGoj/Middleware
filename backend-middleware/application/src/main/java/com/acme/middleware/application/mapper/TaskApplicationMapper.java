@@ -18,7 +18,9 @@ public class TaskApplicationMapper {
                 task.getDescription(),
                 task.getStatus(),
                 task.getCreatedAt(),
-                task.getUpdatedAt()
+                task.getUpdatedAt(),
+                task.getDueDate(),
+                task.getPriority()
         );
     }
 

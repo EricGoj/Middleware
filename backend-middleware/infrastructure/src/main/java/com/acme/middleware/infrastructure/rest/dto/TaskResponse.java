@@ -11,5 +11,7 @@ public record TaskResponse(
     String description,
     TaskStatus status,
     Instant createdAt,
-    Instant updatedAt
+    Instant updatedAt,
+    Instant dueDate,
+    String priority
 ) {}

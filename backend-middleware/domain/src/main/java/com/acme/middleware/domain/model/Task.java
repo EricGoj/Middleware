@@ -10,23 +10,34 @@ public final class Task {
     private TaskStatus status;
     private final Instant createdAt;
     private Instant updatedAt;
+    private Instant dueDate;
+    private String priority;
+    private String businessKey;
 
-    private Task(TaskId id, String title, String description, TaskStatus status, Instant createdAt, Instant updatedAt) {
+    private Task(TaskId id, String title, String description, TaskStatus status, Instant createdAt, Instant updatedAt, Instant dueDate, String priority, String businessKey) {
         this.id = Objects.requireNonNull(id, "Task id cannot be null");
         this.title = validateTitle(title);
         this.description = description;
         this.status = Objects.requireNonNull(status, "Task status cannot be null");
         this.createdAt = Objects.requireNonNull(createdAt, "Created at cannot be null");
         this.updatedAt = Objects.requireNonNull(updatedAt, "Updated at cannot be null");
+        this.dueDate = dueDate;
+        this.priority = priority != null ? priority : "MEDIUM";
+        this.businessKey = businessKey;
     }
 
     public static Task create(TaskId id, String title, String description) {
         Instant now = Instant.now();
-        return new Task(id, title, description, TaskStatus.PENDING, now, now);
+        return new Task(id, title, description, TaskStatus.PENDING, now, now, null, "MEDIUM", null);
     }
 
-    public static Task restore(TaskId id, String title, String description, TaskStatus status, Instant createdAt, Instant updatedAt) {
-        return new Task(id, title, description, status, createdAt, updatedAt);
+    public static Task create(TaskId id, String title, String description, Instant dueDate, String priority) {
+        Instant now = Instant.now();
+        return new Task(id, title, description, TaskStatus.PENDING, now, now, dueDate, priority, null);
+    }
+
+    public static Task restore(TaskId id, String title, String description, TaskStatus status, Instant createdAt, Instant updatedAt, Instant dueDate, String priority, String businessKey) {
+        return new Task(id, title, description, status, createdAt, updatedAt, dueDate, priority, businessKey);
     }
 
     public void updateTitle(String title) {
@@ -74,6 +85,32 @@ public final class Task {
 
     public Instant getUpdatedAt() {
         return updatedAt;
+    }
+
+    public Instant getDueDate() {
+        return dueDate;
+    }
+
+    public String getPriority() {
+        return priority;
+    }
+
+    public void updateDueDate(Instant dueDate) {
+        this.dueDate = dueDate;
+        this.updatedAt = Instant.now();
+    }
+
+    public void updatePriority(String priority) {
+        this.priority = priority != null ? priority : "MEDIUM";
+        this.updatedAt = Instant.now();
+    }
+
+    public void linkToBusinessKey(String businessKey) {
+        this.businessKey = businessKey;
+    }
+
+    public String getBusinessKey() {
+        return businessKey;
     }
 
     @Override

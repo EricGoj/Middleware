@@ -4,7 +4,9 @@ CREATE TABLE tasks (
     description TEXT,
     status VARCHAR(32) NOT NULL,
     created_at TIMESTAMPTZ NOT NULL,
-    updated_at TIMESTAMPTZ NOT NULL
+    updated_at TIMESTAMPTZ NOT NULL,
+    due_date TIMESTAMPTZ,
+    priority VARCHAR(20) DEFAULT 'MEDIUM'
 );
 
 CREATE INDEX idx_tasks_status ON tasks(status);

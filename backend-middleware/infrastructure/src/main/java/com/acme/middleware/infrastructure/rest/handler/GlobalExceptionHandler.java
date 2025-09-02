@@ -1,6 +1,6 @@
 package com.acme.middleware.infrastructure.rest.handler;
 
-import com.acme.middleware.application.service.TaskNotFoundException;
+import com.acme.middleware.application.exceptions.TaskNotFoundException;
 import com.acme.middleware.infrastructure.rest.dto.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;

@@ -12,5 +12,10 @@ public record TaskRequest(
     @Size(max = 5000, message = "Description must not exceed 5000 characters")
     String description,
     
-    TaskStatus status
+    TaskStatus status,
+    
+    java.time.Instant dueDate,
+    
+    @Size(max = 20, message = "Priority must not exceed 20 characters")
+    String priority
 ) {}
