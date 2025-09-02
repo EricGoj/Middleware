@@ -32,7 +32,7 @@ class JiraRestClientAdapterTest {
         when(restTemplate.exchange(anyString(), eq(HttpMethod.POST), any(HttpEntity.class), eq(Map.class)))
                 .thenReturn(ResponseEntity.ok(Map.of("key", "DEMO-1")));
 
-        String key = adapter.createIssue("Summary", "Desc", "Task", Instant.now());
+        String key = adapter.createIssue("Summary", "Desc", "Task", Instant.now(), "Normal");
 
         assertThat(key).isEqualTo("DEMO-1");
 

@@ -25,16 +25,23 @@ public class SyncEventProcessor {
     @Scheduled(fixedRate = 5000)
     public void syncEvents() {
 
-        log.info("Buscando eventos en event async");
+        log.info(" --- Procesando eventos pendientes ---");
 
         List<Event> events = eventRepository.findPendingEvents();
 
-        for (Event event : events) {
-            try {
-                processJiraSyncEventService.execute(event);
-            } catch (Exception e) {
-                log.error("Error processing event: {}", e.getMessage(), e);
-            }  
+        log.info(" --- Eventos pendientes: {} ---", events.size());
+
+        if(!events.isEmpty()) {
+            events.forEach(event -> {
+                try {
+                    processJiraSyncEventService.execute(event);
+                } catch (Exception e) {
+                    log.error("Error processing event: {}", e.getMessage(), e);
+                }  
+            });
         }
     }
+
+    
+
 }

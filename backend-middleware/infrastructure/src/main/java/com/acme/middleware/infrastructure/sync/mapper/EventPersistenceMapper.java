@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import com.acme.middleware.infrastructure.sync.entity.EventEntity;
 import com.acme.middleware.domain.model.Event;
+import com.acme.middleware.domain.model.IssueId;
 
 @Component
 public class EventPersistenceMapper {
@@ -18,7 +19,7 @@ public class EventPersistenceMapper {
         EventEntity entity = new EventEntity(
                 event.getId(),
                 event.getEventType(),
-                event.getEntityId(),
+                event.getEntityId().getValue(),
                 event.getPayload(),
                 event.getStatus(),
                 event.getRetryCount(),
@@ -36,7 +37,7 @@ public class EventPersistenceMapper {
         return Event.restore(
                 entity.getId(),
                 entity.getEventType(),
-                entity.getEntityId(),
+                IssueId.of(entity.getEntityId()),
                 entity.getPayload(),
                 entity.getStatus(),
                 entity.getRetryCount(),

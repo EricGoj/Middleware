@@ -4,6 +4,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 public final class IssueId {
+    
     private final UUID value;
 
     private IssueId(UUID value) {

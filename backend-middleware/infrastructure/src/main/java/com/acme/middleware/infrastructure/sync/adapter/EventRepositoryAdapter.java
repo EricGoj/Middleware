@@ -35,4 +35,9 @@ public class EventRepositoryAdapter implements EventRepository {
         EventEntity savedEntity = jpaRepository.save(entity);
         return eventPersistenceMapper.toDomain(savedEntity);
     }
+
+    @Override
+    public void deleteById(String id) {
+        jpaRepository.deleteById(id);
+    }
 }
