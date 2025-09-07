@@ -6,7 +6,7 @@ import com.acme.middleware.application.dto.IssueDto;
 
 import java.util.UUID;
 
-@Component
+// Removed @Component annotation - interfaces should not be annotated as components
 public interface GetIssueUseCase {
     IssueDto execute(UUID issueId);
 }

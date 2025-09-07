@@ -28,6 +28,7 @@ public class UpdateIssueService implements UpdateIssueUseCase {
     }
 
     @Override
+    @Transactional
     public IssueDto execute(UUID issueId, UpdateIssueCommand command) {
         Issue issue = issueRepository.findById(issueId)
             .orElseThrow(() -> new IssueNotFoundException("Issue not found with id: " + issueId));

@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
-@Component
+// Removed @Component annotation - interfaces should not be annotated as components
 public interface DeleteIssueUseCase {
     void execute(UUID issueId);
 }
