@@ -19,19 +19,18 @@ public class Issue {
     private Issue(IssueId id, String title, String description, IssueStatus status, Instant createdAt, Instant updatedAt, Instant dueDate, String priority, String businessKey) {
         this.id = Objects.requireNonNull(id, "Issue id cannot be null");
         this.title = validateTitle(title);
-        this.description = description;
+        this.description = validateDescription(description);
         this.status = Objects.requireNonNull(status, "Issue status cannot be null");
         this.createdAt = Objects.requireNonNull(createdAt, "Created at cannot be null");
         this.updatedAt = Objects.requireNonNull(updatedAt, "Updated at cannot be null");
         this.dueDate = dueDate;
-        this.priority = priority != null ? priority : "MEDIUM";
+        this.priority = validatePriority(priority);
         this.businessKey = businessKey;
-        this.syncStatus = "PENDING";
+        this.syncStatus = IssueConstants.SYNC_PENDING;
     }
 
     public static Issue create(IssueId id, String title, String description) {
-        Instant now = Instant.now();
-        return new Issue(id, title, description, IssueStatus.PENDING, now, now, null, "MEDIUM", null);
+        return create(id, title, description, null, null);
     }
 
     public static Issue create(IssueId id, String title, String description, Instant dueDate, String priority) {
@@ -49,7 +48,7 @@ public class Issue {
     }
 
     public void updateDescription(String description) {
-        this.description = description;
+        this.description = validateDescription(description);
         this.updatedAt = Instant.now();
     }
 
@@ -63,16 +62,60 @@ public class Issue {
         this.updatedAt = Instant.now();
     }
 
+    public void updateBusinessKey(String businessKey) {
+        this.businessKey = businessKey;
+        this.updatedAt = Instant.now();
+    }
+
+    public void updateDueDate(Instant dueDate) {
+        this.dueDate = dueDate;
+        this.updatedAt = Instant.now();
+    }
+
+    public void updatePriority(String priority) {
+        this.priority = validatePriority(priority);
+        this.updatedAt = Instant.now();
+    }
+
+    // Fixed: linkToBusinessKey now consistently updates updatedAt
+    public void linkToBusinessKey(String businessKey) {
+        this.businessKey = businessKey;
+        this.updatedAt = Instant.now();
+    }
+
     private String validateTitle(String title) {
         if (title == null || title.trim().isEmpty()) {
             throw new IllegalArgumentException("Issue title cannot be null or empty");
         }
-        return title.trim();
+        String trimmedTitle = title.trim();
+        if (trimmedTitle.length() > IssueConstants.MAX_TITLE_LENGTH) {
+            throw new IllegalArgumentException("Issue title cannot exceed " + IssueConstants.MAX_TITLE_LENGTH + " characters");
+        }
+        return trimmedTitle;
     }
 
-    public void updateBusinessKey(String businessKey) {
-        this.businessKey = businessKey;
-        this.updatedAt = Instant.now();
+    private String validateDescription(String description) {
+        if (description != null && description.length() > IssueConstants.MAX_DESCRIPTION_LENGTH) {
+            throw new IllegalArgumentException("Issue description cannot exceed " + IssueConstants.MAX_DESCRIPTION_LENGTH + " characters");
+        }
+        return description;
+    }
+
+    private String validatePriority(String priority) {
+        if (priority == null) {
+            return IssueConstants.DEFAULT_PRIORITY;
+        }
+        String upperPriority = priority.toUpperCase();
+        if (!isValidPriority(upperPriority)) {
+            return IssueConstants.DEFAULT_PRIORITY;
+        }
+        return upperPriority;
+    }
+
+    private boolean isValidPriority(String priority) {
+        return IssueConstants.HIGH_PRIORITY.equals(priority) || 
+               IssueConstants.DEFAULT_PRIORITY.equals(priority) || 
+               IssueConstants.LOW_PRIORITY.equals(priority);
     }
 
     // Getters
@@ -108,20 +151,6 @@ public class Issue {
         return priority;
     }
 
-    public void updateDueDate(Instant dueDate) {
-        this.dueDate = dueDate;
-        this.updatedAt = Instant.now();
-    }
-
-    public void updatePriority(String priority) {
-        this.priority = priority != null ? priority : "MEDIUM";
-        this.updatedAt = Instant.now();
-    }
-
-    public void linkToBusinessKey(String businessKey) {
-        this.businessKey = businessKey;
-    }
-
     public String getBusinessKey() {
         return businessKey;
     }
@@ -145,6 +174,7 @@ public class Issue {
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", status=" + status +
+                ", priority='" + priority + '\'' +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
                 '}';
