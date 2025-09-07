@@ -1,0 +1,47 @@
+# Frontend .dockerignore
+# Archivos que no se deben copiar al contenedor Docker
+
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Production build (se genera durante el build)
+dist/
+build/
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
+.env.production
+
+# Tests
+coverage/
+.nyc_output/
+
+# Logs
+*.log
+logs/
+
+# Documentation
+*.md
+
+# Playwright
+test-results/
+playwright-report/
+playwright/.cache/

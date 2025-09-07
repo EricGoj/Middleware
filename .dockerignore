@@ -1,0 +1,36 @@
+# Backend .dockerignore
+# Archivos que no se deben copiar al contenedor Docker
+
+# Git
+.git/
+.gitignore
+
+# Maven
+target/
+.mvn/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.iws
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
+.env.production
+
+# Documentation
+*.md
+docs/
+
+# Build reports
+BUILD_REPORT.md
