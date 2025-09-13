@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-@Component
+// Removed @Component annotation - interfaces should not be annotated as components
 public interface ListIssuesUseCase {
     List<IssueDto> execute();
 }

@@ -8,22 +8,13 @@ const MAX_RECONNECT_ATTEMPTS = 5
 const INITIAL_RECONNECT_DELAY = 1000
 
 /**
- * Transform WebSocket message payload to frontend format
+ * Extract task from WebSocket message payload
  * @param {Object} payload - WebSocket message payload
- * @returns {Object} - Transformed task object
+ * @returns {Object} - Task object with backend field names
  */
-const transformWebSocketPayload = (payload) => {
-  if (payload.task) {
-    return {
-      id: payload.task.id,
-      titulo: payload.task.title,
-      descripcion: payload.task.description,
-      fecha: payload.task.dueDate || payload.task.createdAt,
-      estado: payload.task.status,
-      completada: payload.task.status === 'DONE'
-    }
-  }
-  return payload
+const extractTaskFromPayload = (payload) => {
+  // Return task directly with backend field names (no transformation needed)
+  return payload.task || payload
 }
 
 /**
@@ -62,8 +53,8 @@ export const connectWebSocket = (dispatch) => {
             case 'TASK_CREATED':
             case 'TASK_UPDATED':
               if (data.task) {
-                const transformedTask = transformWebSocketPayload(data)
-                dispatch(upsertFromWs(transformedTask))
+                const task = extractTaskFromPayload(data)
+                dispatch(upsertFromWs(task))
               }
               break
             case 'TASK_DELETED':

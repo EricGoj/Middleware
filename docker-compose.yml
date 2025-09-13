@@ -1,0 +1,120 @@
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: middleware-postgres
+    environment:
+      POSTGRES_DB: middleware_db
+      POSTGRES_USER: middleware_user
+      POSTGRES_PASSWORD: middleware_password
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    ports:
+      - "5432:5432"
+    networks:
+      - middleware-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U middleware_user -d middleware_db"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+
+  # Backend Spring Boot Application
+  backend:
+    build:
+      context: ./backend-middleware
+      dockerfile: Dockerfile
+    container_name: middleware-backend
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/middleware_db
+      SPRING_DATASOURCE_USERNAME: middleware_user
+      SPRING_DATASOURCE_PASSWORD: middleware_password
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.PostgreSQLDialect
+      JIRA_URL: ${JIRA_URL:-https://your-domain.atlassian.net}
+      JIRA_USERNAME: ${JIRA_USERNAME:-your-email@domain.com}
+      JIRA_API_TOKEN: ${JIRA_API_TOKEN:-your-api-token}
+      LOGGING_LEVEL_COM_ACME: DEBUG
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - middleware-network
+    volumes:
+      - backend_logs:/app/logs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    restart: unless-stopped
+
+  # Frontend React Application
+  frontend:
+    build:
+      context: ./frontend-middleware
+      dockerfile: Dockerfile
+    container_name: middleware-frontend
+    environment:
+      REACT_APP_API_BASE_URL: http://localhost:8080/api
+      NODE_ENV: production
+    ports:
+      - "3000:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - middleware-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+
+  # pgAdmin (Optional - for database management)
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: middleware-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@middleware.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "5050:80"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - middleware-network
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    profiles:
+      - tools
+    restart: unless-stopped
+
+# Volumes for data persistence
+volumes:
+  postgres_data:
+    driver: local
+  backend_logs:
+    driver: local
+  pgadmin_data:
+    driver: local
+
+# Network for service communication
+networks:
+  middleware-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

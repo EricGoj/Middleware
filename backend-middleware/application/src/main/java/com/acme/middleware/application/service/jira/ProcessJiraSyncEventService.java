@@ -28,6 +28,7 @@ public class ProcessJiraSyncEventService implements ProcessJiraSyncEventUseCase 
     }
     
     @Override
+    @Transactional
     public void execute(Event event) {
 
         Issue issue = issueRepository.findById(event.getEntityId().getValue()).get();
