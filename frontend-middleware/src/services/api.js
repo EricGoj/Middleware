@@ -55,7 +55,7 @@ const transformTaskToBackend = (frontendTask) => ({
   description: frontendTask.descripcion,
   dueDate: frontendTask.fecha,
   status: frontendTask.estado,
-  priority: 'MEDIUM' // Default priority
+  priority: 'Medium' // Default priority
 })
 
 // API service principal con soporte para mocks
@@ -79,7 +79,7 @@ const createApiService = () => {
   
   // Task CRUD operations with data transformation
   getTasks: async () => {
-    const response = await apiClient.get('/api/tasks')
+    const response = await apiClient.get('/api/issues')
     return {
       ...response,
       data: response.data.map(transformTaskFromBackend)
@@ -88,7 +88,7 @@ const createApiService = () => {
   
   createTask: async (taskData) => {
     const backendData = transformTaskToBackend(taskData)
-    const response = await apiClient.post('/api/tasks', backendData)
+    const response = await apiClient.post('/api/issues', backendData)
     return {
       ...response,
       data: transformTaskFromBackend(response.data)
@@ -97,14 +97,14 @@ const createApiService = () => {
   
   updateTask: async (id, taskData) => {
     const backendData = transformTaskToBackend(taskData)
-    const response = await apiClient.patch(`/api/tasks/${id}`, backendData)
+    const response = await apiClient.patch(`/api/issues/${id}`, backendData)
     return {
       ...response,
       data: transformTaskFromBackend(response.data)
     }
   },
   
-    deleteTask: (id) => apiClient.delete(`/api/tasks/${id}`),
+    deleteTask: (id) => apiClient.delete(`/api/issues/${id}`),
   }
 }
 

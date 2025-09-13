@@ -1,6 +1,8 @@
 package com.acme.middleware.infrastructure.rest.dto;
 
 import com.acme.middleware.domain.model.IssueStatus;
+import com.acme.middleware.infrastructure.rest.jackson.MultiFormatInstantDeserializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import java.time.Instant;
@@ -15,6 +17,7 @@ public record IssueRequest(
     
     IssueStatus status,
     
+    @JsonDeserialize(using = MultiFormatInstantDeserializer.class)
     Instant dueDate,
     
     @Size(max = 20, message = "Priority must not exceed 20 characters")

@@ -24,14 +24,14 @@ public class Issue {
         this.createdAt = Objects.requireNonNull(createdAt, "Created at cannot be null");
         this.updatedAt = Objects.requireNonNull(updatedAt, "Updated at cannot be null");
         this.dueDate = dueDate;
-        this.priority = priority != null ? priority : "MEDIUM";
+        this.priority = priority != null ? priority : "Medium";
         this.businessKey = businessKey;
-        this.syncStatus = "PENDING";
+        this.syncStatus = "Pending";
     }
 
     public static Issue create(IssueId id, String title, String description) {
         Instant now = Instant.now();
-        return new Issue(id, title, description, IssueStatus.PENDING, now, now, null, "MEDIUM", null);
+        return new Issue(id, title, description, IssueStatus.PENDING, now, now, null, "Medium", null);
     }
 
     public static Issue create(IssueId id, String title, String description, Instant dueDate, String priority) {

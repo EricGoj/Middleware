@@ -3,8 +3,7 @@ import { mockApiService, mockWebSocketEvents } from './apiService.js'
 
 // Detectar si estamos en modo mock
 export const isMockMode = () => {
-  return import.meta.env.VITE_USE_MOCKS === 'true' || 
-         import.meta.env.MODE === 'development' && !import.meta.env.VITE_API_URL
+  return false;
 }
 
 // Inicializar sistema de mocks
